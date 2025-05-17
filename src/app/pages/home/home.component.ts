@@ -3,27 +3,39 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-home',
   template: `
-    <!-- Hero Section -->
-    <section class="hero">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-6">
-            <h1>Fabricating Quality.<br>Delivering Excellence.</h1>
-            <p class="lead">ISO-certified precision sheet metal fabrication with over 20 years of expertise in delivering custom solutions.</p>
-            <div class="mt-4">
-              <a routerLink="/request-quote" class="btn btn-primary me-3">Request a Quote</a>
-              <a routerLink="/services" class="btn btn-secondary">Our Services</a>
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <img src="assets/images/hero-image-placeholder.jpg" alt="Sheet Metal Fabrication" class="img-fluid rounded shadow">
-          </div>
-        </div>
+<section class="hero-section d-flex align-items-center justify-content-center min-vh-100 bg-white">
+  <div class="container">
+    <div class="row align-items-center p-5">
+      
+      <!-- Left side: Heading and Text -->
+      <div class="col-lg-6">
+        <h1 class="display-4 fw-bold">Fabricating Quality.<br>Delivering Excellence.</h1>
+        <p class="lead mt-3">
+          ISO-certified precision sheet metal fabrication with over 20 years of expertise in delivering custom solutions.
+        </p>
       </div>
-    </section>
+
+      <!-- Right side: Buttons and Down Arrow -->
+      <div class="col-lg-6 d-flex flex-column align-items-lg-end align-items-start mt-4 mt-lg-0">
+        <div class="mb-4 d-flex flex-wrap gap-3">
+          <a routerLink="/request-quote" class="btn btn-primary btn-lg px-4">Request a Quote</a>
+          <a routerLink="/services" class="btn btn-outline-primary btn-lg px-4">Our Services</a>
+        </div>
+
+        <!-- Scroll Down Arrow -->
+        <a href="#services-overview" class="scroll-down-icon d-inline-block mt-3">
+          <i class="bi bi-chevron-double-down" style="font-size: 2rem; color: #007bff;"></i>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
 
     <!-- Services Overview -->
-    <section class="section bg-light">
+    <section class="section bg-light" id="services-overview">
       <div class="container">
         <h2 class="text-center mb-5">Our Comprehensive Services</h2>
         <div class="row g-4">
@@ -107,6 +119,17 @@ import { Component } from '@angular/core';
       font-size: 1.25rem;
       font-weight: 300;
     }
+    .scroll-down-icon {
+  animation: bounce 2s infinite;
+  text-decoration: none;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(6px); }
+  60% { transform: translateY(3px); }
+}
+
   `]
 })
 export class HomeComponent {
@@ -168,4 +191,4 @@ export class HomeComponent {
       description: 'Sheet metal solutions for electrical and control panels.'
     }
   ];
-} 
+}

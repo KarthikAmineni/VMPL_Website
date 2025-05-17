@@ -22,8 +22,8 @@ import { Component } from '@angular/core';
           <div class="col-md-4">
             <h5>Contact Info</h5>
             <ul class="list-unstyled">
-              <li><i class="fas fa-map-marker-alt me-2"></i> 123 Industrial Park, City, State</li>
-              <li><i class="fas fa-phone me-2"></i> +1 (555) 123-4567</li>
+              <li><i class="fas fa-map-marker-alt me-2"></i> Plot NO 39 & 40, SV Co. Op., Ind Estate, Balanagar, Hyderabad, Telangana 500037</li>
+              <li><i class="fas fa-phone me-2"></i> +91 9948122476</li>
               <li><i class="fas fa-envelope me-2"></i> info&#64;example.com</li>
             </ul>
           </div>

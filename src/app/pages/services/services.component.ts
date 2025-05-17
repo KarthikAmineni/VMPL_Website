@@ -108,6 +108,9 @@ import { Router } from '@angular/router';
     .quality-list li {
       margin-bottom: 1rem;
     }
+    .bg-primary {
+      background-color: var(--primary-color) !important;
+    }
   `]
 })
 export class ServicesComponent {

@@ -8,7 +8,8 @@ import { Router } from '@angular/router';
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
           <a class="navbar-brand" routerLink="/">
-            <img src="assets/images/logo-placeholder.png" alt="XYZ Pvt. Ltd. Logo" height="40">
+          <h1 class="d-inline-block align-text-top text-light custom-vmpl">VMPL</h1>
+            <!-- <img src="assets/images/Logo.png" alt="VMPL Logo" class="d-inline-block align-text-top logo-img"> -->
           </a>
           <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed">
             <span class="navbar-toggler-icon"></span>
@@ -33,9 +34,9 @@ import { Router } from '@angular/router';
               <li class="nav-item">
                 <a class="nav-link" routerLink="/clients" routerLinkActive="active">Clients</a>
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a class="nav-link" routerLink="/certifications" routerLinkActive="active">Certifications</a>
-              </li>
+              </li> -->
               <li class="nav-item">
                 <a class="nav-link" routerLink="/contact" routerLinkActive="active">Contact</a>
               </li>
@@ -62,6 +63,20 @@ import { Router } from '@angular/router';
     .nav-link.active {
       color: #fff !important;
       font-weight: 600;
+    }
+    .custom-vmpl {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+}
+
+    .logo-img {
+      height: 25%;
+      min-width: 25%;
+      width: 50%;
+      object-fit: cover;
     }
     @media (max-width: 991px) {
       .navbar-collapse {
