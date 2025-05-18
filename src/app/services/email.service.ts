@@ -6,31 +6,41 @@ import emailjs from '@emailjs/browser';
   providedIn: 'root'
 })
 export class EmailService {
-  private defaultTemplateId = 'template_dmr95lb'; // You'll replace this with your template ID // Secret Template ID
-  private defaultServiceId = 'service_njxdv38';  // You'll replace this with your service ID // Secret Service ID
-  private defaultUserId = 'Vi33hjoWURci0lGWf';       // You'll replace this with your user ID // Secret User ID 
+  private readonly TEMPLATE_IDS = {
+    contact: 'template_dmr95lb',
+    quote: 'template_nag9k6a'  // Replace with your actual quote template ID
+  };
+  private defaultServiceId = 'service_njxdv38';
+  private defaultUserId = 'Vi33hjoWURci0lGWf';
 
   constructor() {
     // Initialize EmailJS with your user ID
     emailjs.init(this.defaultUserId);
   }
 
-  sendEmail(formData: any): Observable<any> {
+  sendEmail(formData: any, type: 'contact' | 'quote' = 'contact'): Observable<any> {
+    const templateId = this.TEMPLATE_IDS[type];
+    
+    // Format the data according to the expected template format
     const templateParams = {
-
-        title: formData.subject,
-        name: formData.name,
-        message: formData.message,
-        email: formData.email,
-        Email: formData.email,
-        phoneNumber: formData.phone,
-
+      name: formData.name,
+      Name: formData.name,
+      CompanyName: formData.company || '',
+      Email: formData.email,
+      PhoneNumber: formData.phone || '',
+      ProjectType: formData.projectType || '',
+      ProjectDescription: formData.description || '',
+      EstimatedQuantity: formData.quantity || '',
+      email: formData.email,
+      message: formData.message || '',
+      subject: formData.subject || 'Quote Request',
+      Attachments: formData.attachments || ''
     };
 
     return from(
       emailjs.send(
         this.defaultServiceId,
-        this.defaultTemplateId,
+        templateId,
         templateParams
       )
     );
@@ -40,7 +50,6 @@ export class EmailService {
   updateConfig(serviceId: string, templateId: string, userId: string) {
     emailjs.init(userId);
     this.defaultServiceId = serviceId;
-    this.defaultTemplateId = templateId;
     this.defaultUserId = userId;
   }
 } 

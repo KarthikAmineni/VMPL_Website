@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormService } from '../../services/form.service';
+import { EmailService } from '../../services/email.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-quote-request',
   template: `
     <section class="hero hero-section bg-light">
-     <div class="background-overlay"></div>
+      <div class="background-overlay"></div>
       <div class="container">
         <div class="row align-items-center">
           <div class="col-lg-8 mx-auto text-center">
@@ -99,21 +101,16 @@ import { FormService } from '../../services/form.service';
                     </div>
                   </div>
 
-                  <div class="mb-4">
-                    <label for="attachments" class="form-label">Attachments</label>
-                    <input type="file" class="form-control" id="attachments" multiple formControlName="attachments">
-                    <div class="form-text">Upload any relevant drawings, specifications, or documents (Max. 10MB per file)</div>
-                  </div>
-
+                  <!-- Terms and Conditions -->
                   <div class="mb-4">
                     <div class="form-check">
                       <input type="checkbox" class="form-check-input" id="terms" formControlName="terms">
                       <label class="form-check-label" for="terms">
                         I agree to the terms and conditions
                       </label>
-                      <div *ngIf="quoteForm.get('terms')?.invalid && quoteForm.get('terms')?.touched" class="text-danger">
-                        You must agree to the terms and conditions
-                      </div>
+                    </div>
+                    <div *ngIf="quoteForm.get('terms')?.invalid && quoteForm.get('terms')?.touched" class="text-danger">
+                      You must agree to the terms and conditions
                     </div>
                   </div>
 
@@ -140,34 +137,50 @@ import { FormService } from '../../services/form.service';
       font-size: 0.875rem;
       color: #6c757d;
     }
-      .hero-section {
-  position: relative;
-  background: url('/assets/images/ClientHandShake.jpg') no-repeat center center/cover, white; /* Background image */
-}
-
-.background-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4); /* Black overlay with 50% transparency */
-  z-index: 1; /* Ensure the overlay is above the background image */
-}
-
-.container {
-  position: relative;
-  z-index: 2; /* Ensures content is above the overlay */
-}
+    .hero-section {
+      position: relative;
+      background: url('/assets/images/ClientHandShake.jpg') no-repeat center center/cover, white;
+    }
+    .background-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 1;
+    }
+    .container {
+      position: relative;
+      z-index: 2;
+    }
   `]
 })
 export class QuoteRequestComponent implements OnInit {
   quoteForm: FormGroup;
   isSubmitting = false;
+  // Commented out file handling properties
+  // selectedFiles: File[] = [];
+  // readonly MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
+  // fileError: string = '';
+  
+  // Commented out file type constants
+  /* private readonly ALLOWED_FILE_TYPES = {
+    'zip': ['application/zip', 'application/x-zip-compressed'],
+    'pdf': ['application/pdf'],
+    'dwg': ['application/acad', 'application/x-acad', 'application/autocad_dwg', 'image/vnd.dwg', 'image/x-dwg'],
+    'dxf': ['application/dxf', 'application/x-dxf', 'image/vnd.dxf', 'image/x-dxf'],
+    'step': ['application/STEP', 'application/step'],
+    'stp': ['application/STEP', 'application/step'],
+    'iges': ['application/iges', 'application/x-iges'],
+    'igs': ['application/iges', 'application/x-iges']
+  }; */
 
   constructor(
     private formBuilder: FormBuilder,
-    private formService: FormService
+    private formService: FormService,
+    private emailService: EmailService,
+    private snackBar: MatSnackBar
   ) {
     this.quoteForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -178,26 +191,125 @@ export class QuoteRequestComponent implements OnInit {
       description: ['', Validators.required],
       quantity: [''],
       timeline: [''],
-      attachments: [''],
+      // attachments: [''], // Commented out attachments
       terms: [false, Validators.requiredTrue]
     });
   }
 
   ngOnInit(): void {}
 
-  onSubmit(): void {
+  // Commented out file handling methods
+  /*
+  onFileSelect(event: any): void {
+    const files = event.target.files as FileList;
+    this.fileError = '';
+    
+    if (files.length === 0) {
+      return;
+    }
+
+    const file = files[0];
+
+    if (!this.isFileTypeAllowed(file)) {
+      this.fileError = 'Please upload only ZIP, PDF, or CAD files (DWG, DXF, STEP/STP, IGES/IGS)';
+      event.target.value = '';
+      this.selectedFiles = [];
+      return;
+    }
+    
+    if (file.size > this.MAX_FILE_SIZE) {
+      this.fileError = `The file size exceeds 2MB. Your file size is ${(file.size / 1024 / 1024).toFixed(2)}MB`;
+      event.target.value = '';
+      this.selectedFiles = [];
+      return;
+    }
+    
+    this.selectedFiles = [file];
+  }
+
+  private isFileTypeAllowed(file: File): boolean {
+    const extension = file.name.split('.').pop()?.toLowerCase() || '';
+    const allowedMimeTypes = this.ALLOWED_FILE_TYPES[extension as keyof typeof this.ALLOWED_FILE_TYPES] || [];
+    return allowedMimeTypes.includes(file.type) || Object.keys(this.ALLOWED_FILE_TYPES).includes(extension);
+  }
+
+  private async fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  }
+
+  getFileType(file: File): string {
+    const extension = file.name.split('.').pop()?.toLowerCase() || '';
+    switch(extension) {
+      case 'zip': return 'ZIP Archive';
+      case 'pdf': return 'PDF Document';
+      case 'dwg': return 'AutoCAD Drawing';
+      case 'dxf': return 'CAD Exchange File';
+      case 'step':
+      case 'stp': return 'STEP CAD File';
+      case 'iges':
+      case 'igs': return 'IGES CAD File';
+      default: return 'Unknown Type';
+    }
+  }
+  */
+
+  private showSuccessMessage(): void {
+    this.snackBar.open('Quote request submitted successfully! We will get back to you soon.', 'Close', {
+      duration: 6000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      panelClass: ['success-snackbar']
+    });
+  }
+
+  private showErrorMessage(error?: any): void {
+    let errorMessage = 'Failed to submit quote request. Please try again later.';
+    if (error?.status === 0) {
+      errorMessage = 'Network error. Please check your internet connection.';
+    }
+    this.snackBar.open(errorMessage, 'Close', {
+      duration: 6000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      panelClass: ['error-snackbar']
+    });
+  }
+
+  async onSubmit(): Promise<void> {
     if (this.quoteForm.valid) {
       this.isSubmitting = true;
-      this.formService.submitQuoteRequest(this.quoteForm.value).subscribe({
-        next: () => {
-          this.isSubmitting = false;
-          this.quoteForm.reset();
-          // TODO: Show success message
-        },
-        error: () => {
-          this.isSubmitting = false;
-          // TODO: Show error message
-        }
+
+      try {
+        // Send form data without attachments
+        const formData = {
+          ...this.quoteForm.value,
+          attachments: '' // Empty string for attachments
+        };
+
+        // Send both form data and email
+        await Promise.all([
+          this.formService.submitQuoteRequest(formData).toPromise(),
+          this.emailService.sendEmail(formData, 'quote').toPromise()
+        ]);
+
+        this.showSuccessMessage();
+        this.quoteForm.reset();
+        this.isSubmitting = false;
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        this.showErrorMessage(error);
+        this.isSubmitting = false;
+      }
+    } else {
+      // Mark all fields as touched to trigger validation messages
+      Object.keys(this.quoteForm.controls).forEach(key => {
+        const control = this.quoteForm.get(key);
+        control?.markAsTouched();
       });
     }
   }
