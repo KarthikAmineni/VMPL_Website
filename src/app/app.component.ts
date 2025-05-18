@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +23,20 @@ import { RouterModule } from '@angular/router';
     }
   `]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'XYZ Pvt. Ltd. - Precision Sheet Metal Fabrication';
-} 
+  
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth'
+        }); // Scrolls to the top of the page
+      }
+    });
+  }
+}

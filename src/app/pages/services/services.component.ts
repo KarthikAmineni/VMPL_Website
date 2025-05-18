@@ -5,16 +5,17 @@ import { Router } from '@angular/router';
   selector: 'app-services',
   template: `
     <!-- Hero Section -->
-    <section class="hero bg-light">
+    <section class="hero hero-section bg-light">
+    <div class="background-overlay"></div> <!-- Transparent overlay -->
       <div class="container">
         <div class="row align-items-center">
-          <div class="col-lg-6">
-            <h1>Our Services</h1>
-            <p class="lead">Comprehensive sheet metal fabrication solutions tailored to your needs.</p>
+          <div class="col-lg-8 mx-auto text-center">
+            <h1 class="text-white">Our Services</h1>
+            <p class="lead text-white">Comprehensive sheet metal fabrication solutions tailored to your needs.</p>
           </div>
-          <div class="col-lg-6">
+          <!-- <div class="col-lg-6">
             <img src="assets/images/services-hero-placeholder.jpg" alt="Sheet Metal Fabrication Services" class="img-fluid rounded shadow">
-          </div>
+          </div> -->
         </div>
       </div>
     </section>
@@ -65,16 +66,16 @@ import { Router } from '@angular/router';
         <div class="row align-items-center">
           <div class="col-lg-6 mb-4 mb-lg-0">
             <h2>Quality Assurance</h2>
-            <p>At XYZ Pvt. Ltd., quality is not just a process – it's our commitment. Our comprehensive quality assurance program ensures that every product meets the highest standards of precision and reliability.</p>
+            <p class="text-justified">At VM Precision Punch Pvt. Ltd., quality is not just a process – it's our commitment. Our comprehensive quality assurance program ensures that every product meets the highest standards of precision and reliability.</p>
             <ul class="list-unstyled quality-list">
-              <li *ngFor="let point of qualityPoints">
-                <i class="fas fa-shield-alt text-primary me-2"></i>
+              <li *ngFor="let point of qualityPoints" class="d-flex align-items-center">
+                <i class="fas fa-arrow-right text-primary me-2"></i>
                 {{point}}
               </li>
             </ul>
           </div>
           <div class="col-lg-6">
-            <img src="assets/images/quality-assurance-placeholder.jpg" alt="Quality Assurance" class="img-fluid rounded shadow">
+            <img src="/assets/images/quality.jpg" alt="Quality Assurance" class="img-fluid rounded ">
           </div>
         </div>
       </div>
@@ -111,13 +112,35 @@ import { Router } from '@angular/router';
     .bg-primary {
       background-color: var(--primary-color) !important;
     }
+    .text-justified{
+      text-align: justify;
+    }
+    .hero-section {
+  position: relative;
+  background: url('/assets/images/services.jpg') no-repeat center center/cover, white; /* Background image */
+}
+
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Black overlay with 50% transparency */
+  z-index: 1; /* Ensure the overlay is above the background image */
+}
+
+.container {
+  position: relative;
+  z-index: 2; /* Ensures content is above the overlay */
+}
   `]
 })
 export class ServicesComponent {
   services = [
     {
       title: 'Laser Cutting',
-      image: 'assets/images/services/laser-cutting.jpg',
+      image: 'assets/images/laser_machin.jpg',
       description: 'Precision laser cutting services for various materials with tight tolerances.',
       features: [
         'High-precision cutting',
@@ -220,4 +243,4 @@ export class ServicesComponent {
   navigateToQuote() {
     this.router.navigate(['/request-quote']);
   }
-} 
+}

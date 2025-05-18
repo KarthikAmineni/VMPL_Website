@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
           <a class="navbar-brand" routerLink="/">
-          <h1 class="d-inline-block align-text-top text-light custom-vmpl">VMPL</h1>
+          <h1 class="d-inline-block align-text-top text-light custom-vmpl border-outline">VMPL</h1>
             <!-- <img src="assets/images/Logo.png" alt="VMPL Logo" class="d-inline-block align-text-top logo-img"> -->
           </a>
           <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed">
@@ -25,9 +25,9 @@ import { Router } from '@angular/router';
               <li class="nav-item">
                 <a class="nav-link" routerLink="/services" routerLinkActive="active">Services</a>
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a class="nav-link" routerLink="/industries" routerLinkActive="active">Industries</a>
-              </li>
+              </li> -->
               <li class="nav-item">
                 <a class="nav-link" routerLink="/projects" routerLinkActive="active">Projects</a>
               </li>
@@ -86,10 +86,15 @@ import { Router } from '@angular/router';
         margin-top: 1rem;
       }
     }
+    .border-outline {
+      border: 4px solid white; /* Thick white border */
+      padding: 0.5rem 1rem; /* Add padding inside the border */
+      border-radius: 8px; /* Optional: Rounded corners */
+    }
   `]
 })
 export class HeaderComponent {
   isMenuCollapsed = true;
 
   constructor(private router: Router) {}
-} 
+}

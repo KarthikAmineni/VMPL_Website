@@ -15,12 +15,24 @@
   box-sizing: border-box;
 }
 
+html, body {
+  overflow: auto; /* Ensure scrolling is enabled */
+  height: auto; /* Ensure height is not restricted */
+}
+
 body {
   font-family: 'Lato', sans-serif;
   font-size: 16px;
   line-height: 1.6;
   color: var(--secondary-color);
   background-color: var(--white);
+  overflow-y: scroll; /* Allows vertical scrolling without showing the scrollbar */
+  -ms-overflow-style: none; /* Hides scrollbar in Internet Explorer */
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Hides scrollbar in Chrome, Safari, and Edge */
 }
 
 /* Typography */
@@ -156,4 +168,4 @@ p {
   .container {
     padding: 0 0.75rem;
   }
-} 
+}

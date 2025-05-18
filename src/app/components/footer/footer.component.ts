@@ -7,11 +7,11 @@ import { Component } from '@angular/core';
       <div class="container">
         <div class="row">
           <div class="col-md-4 mb-4 mb-md-0">
-            <h5>About Us</h5>
+            <h5 class="text-white fw-bold">About Us</h5>
             <p>Leading provider of precision sheet metal fabrication services, serving industries worldwide with quality and innovation.</p>
           </div>
           <div class="col-md-4 mb-4 mb-md-0">
-            <h5>Quick Links</h5>
+            <h5 class="text-white fw-bold">Quick Links</h5>
             <ul class="list-unstyled">
               <li><a routerLink="/" class="text-light">Home</a></li>
               <li><a routerLink="/services" class="text-light">Services</a></li>
@@ -20,18 +20,18 @@ import { Component } from '@angular/core';
             </ul>
           </div>
           <div class="col-md-4">
-            <h5>Contact Info</h5>
+            <h5 class="text-white fw-bold">Contact Info</h5>
             <ul class="list-unstyled">
-              <li><i class="fas fa-map-marker-alt me-2"></i> Plot NO 39 & 40, SV Co. Op., Ind Estate, Balanagar, Hyderabad, Telangana 500037</li>
+              <li><i class="fas fa-map-marker-alt "></i> Plot NO 39 & 40, SV Co. Op., Ind Estate, Balanagar, Hyderabad, Telangana 500037</li>
               <li><i class="fas fa-phone me-2"></i> +91 9948122476</li>
-              <li><i class="fas fa-envelope me-2"></i> info&#64;example.com</li>
+              <li><i class="fas fa-envelope me-2"></i> vmpl&#64;gmail.com.com</li>
             </ul>
           </div>
         </div>
         <hr class="my-4">
         <div class="row">
           <div class="col-md-6">
-            <p class="mb-0">&copy; {{ currentYear }} XYZ Pvt. Ltd. All rights reserved.</p>
+            <p class="mb-0">&copy; {{ currentYear }} VM Precision Punch Pvt. Ltd. All rights reserved.</p>
           </div>
           <div class="col-md-6 text-md-end">
             <a href="#" class="text-light me-3"><i class="fab fa-facebook"></i></a>
@@ -60,4 +60,4 @@ import { Component } from '@angular/core';
 })
 export class FooterComponent {
   currentYear = new Date().getFullYear();
-} 
+}

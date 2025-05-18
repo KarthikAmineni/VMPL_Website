@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-home',
   template: `
-<section class="hero-section d-flex align-items-center justify-content-center min-vh-100 bg-white">
-  <div class="container">
+<section class="hero-section d-flex align-items-center justify-content-center min-vh-100">
+  <div class="background-overlay"></div>
+  <div class="container position-relative">
     <div class="row align-items-center p-5">
       
       <!-- Left side: Heading and Text -->
@@ -55,11 +56,11 @@ import { Component } from '@angular/core';
     <!-- Why Choose Us -->
     <section class="section">
       <div class="container">
-        <h2 class="text-center mb-5">Why Choose XYZ Pvt. Ltd.?</h2>
+        <h2 class="text-center mb-5">Why Choose VM Precision Punch Pvt. Ltd.?</h2>
         <div class="row g-4">
           <div class="col-md-6 col-lg-3" *ngFor="let feature of features">
             <div class="text-center">
-              <i [class]="feature.icon + ' feature-icon'"></i>
+              <i [class]="feature.icon + ' feature-icon'+ 'aria-hidden=true'"></i>
               <h3 class="h5 mt-3">{{feature.title}}</h3>
               <p class="mb-0">{{feature.description}}</p>
             </div>
@@ -68,23 +69,24 @@ import { Component } from '@angular/core';
       </div>
     </section>
 
-    <!-- Industries We Serve -->
-    <section class="section bg-light">
+
+ <!-- Industries Served -->
+ <section class="section">
       <div class="container">
         <h2 class="text-center mb-5">Industries We Serve</h2>
         <div class="row g-4">
           <div class="col-md-4" *ngFor="let industry of industries">
-            <div class="card h-100">
-              <img [src]="industry.image" [alt]="industry.name" class="card-img-top">
-              <div class="card-body">
-                <h3 class="h5">{{industry.name}}</h3>
-                <p class="mb-0">{{industry.description}}</p>
-              </div>
+            <div class="industry-card text-center">
+              <i [class]="industry.icon + ' industry-icon'"></i>
+              <h3 class="h5 mt-3">{{industry.name}}</h3>
+              <p class="mb-0">{{industry.description}}</p>
             </div>
           </div>
         </div>
       </div>
     </section>
+
+
 
     <!-- CTA Section -->
     <section class="section bg-primary text-white">
@@ -129,13 +131,52 @@ import { Component } from '@angular/core';
   40% { transform: translateY(6px); }
   60% { transform: translateY(3px); }
 }
+.industry-icon {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+    }
+    .industry-card {
+      padding: 2rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+    .industry-card:hover {
+      transform: translateY(-5px);
+    }
+
+.hero-section {
+  position: relative;
+  background: white; /* Fallback background color */
+  background: url('/assets/images/home-background-image.jpg') no-repeat center center/cover, white;
+  min-height: 100vh;
+}
+
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7); /* White overlay with 70% transparency */
+  z-index: 1;
+}
+
+.container {
+  position: relative;
+  z-index: 2; /* Ensures content is above the overlay */
+}
 
   `]
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit{
+  ngOnInit(): void {
+    window.scrollTo(0, 0); // Scrolls to the top of the page when the component is initialized
+  }
   services = [
     {
-      icon: 'fas fa-laser',
+      icon: 'fas fa-bolt  me-2',
       title: 'Laser Cutting',
       description: 'Precision laser cutting services for mild steel, stainless steel, and aluminum sheets.'
     },
@@ -176,17 +217,17 @@ export class HomeComponent {
 
   industries = [
     {
-      image: 'assets/images/aerospace-placeholder.jpg',
+      icon: 'fas fa-plane',
       name: 'Aerospace & Defense',
       description: 'Precision components for aerospace and defense applications.'
     },
     {
-      image: 'assets/images/railway-placeholder.jpg',
+      icon: 'fas fa-train',
       name: 'Railway & Transportation',
       description: 'Custom fabrication for transportation equipment.'
     },
     {
-      image: 'assets/images/electronics-placeholder.jpg',
+      icon: 'fas fa-microchip',
       name: 'Electronics & Control',
       description: 'Sheet metal solutions for electrical and control panels.'
     }

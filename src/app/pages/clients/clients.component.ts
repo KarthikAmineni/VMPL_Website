@@ -4,16 +4,17 @@ import { Component } from '@angular/core';
   selector: 'app-clients',
   template: `
     <!-- Hero Section -->
-    <section class="hero bg-light">
+    <section class="hero hero-section bg-light">
+      <div class="background-overlay"></div>
       <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-6">
-            <h1>Our Clients</h1>
-            <p class="lead">Trusted by industry leaders for precision sheet metal fabrication.</p>
+        <div class="row align-items-center p-5">
+          <div class="col-lg-8 mx-auto text-center">
+            <h1 class="text-white">Our Clients</h1>
+            <p class="lead text-white">Trusted by industry leaders for precision sheet metal fabrication.</p>
           </div>
-          <div class="col-lg-6">
+          <!-- <div class="col-lg-6">
             <img src="assets/images/clients-hero-placeholder.jpg" alt="Our Clients" class="img-fluid rounded shadow">
-          </div>
+          </div> -->
         </div>
       </div>
     </section>
@@ -24,8 +25,13 @@ import { Component } from '@angular/core';
         <h2 class="text-center mb-5">Companies That Trust Us</h2>
         <div class="row g-4">
           <div class="col-6 col-md-3" *ngFor="let client of clients">
-            <div class="client-logo">
-              <img [src]="client.logo" [alt]="client.name" class="img-fluid">
+            <div
+              class="client-card"
+              [ngStyle]="{ 'background-image': 'url(' + client.logo + ')' }"
+            >
+              <div class="client-card-overlay">
+                <h5 class="client-name">{{ client.name }}</h5>
+              </div>
             </div>
           </div>
         </div>
@@ -89,6 +95,25 @@ import { Component } from '@angular/core';
       padding: 6rem 0;
       margin-bottom: 2rem;
     }
+    .hero-section {
+  position: relative;
+  background: url('/assets/images/ClientHandShake.jpg') no-repeat center center/cover, white; /* Background image */
+}
+
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Black overlay with 50% transparency */
+  z-index: 1; /* Ensure the overlay is above the background image */
+}
+
+.container {
+  position: relative;
+  z-index: 2; /* Ensures content is above the overlay */
+}
     .client-logo {
       height: 120px;
       display: flex;
@@ -107,6 +132,9 @@ import { Component } from '@angular/core';
       max-height: 80%;
       max-width: 80%;
       object-fit: contain;
+    }
+    .bg-primary {
+      background-color: var(--primary-color) !important;
     }
     .testimonial-rating {
       color: #ffc107;
@@ -139,46 +167,85 @@ import { Component } from '@angular/core';
     .industry-card:hover {
       transform: translateY(-5px);
     }
-  `]
+    .client-card {
+      height: 150px; /* Adjust height as needed */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-size: cover; /* Ensures the image covers the card */
+      background-position: center; /* Centers the image */
+      border-radius: 8px; /* Optional: Rounded corners */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Shadow for the card */
+      position: relative; /* Enables positioning for the overlay */
+      transition: transform 0.3s ease;
+    }
+    .client-card:hover {
+      transform: translateY(-5px); /* Adds hover effect */
+    }
+    .client-card-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7); /* Black overlay with 70% transparency */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px; /* Matches the card's border-radius */
+      opacity: 0; /* Initially hidden */
+      transition: opacity 0.3s ease; /* Smooth fade-in effect */
+    }
+    .client-card:hover .client-card-overlay {
+      opacity: 1; /* Show the overlay on hover */
+    }
+    .client-name {
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+      text-align: center;
+      padding: 0.5rem;
+    }
+      `]
 })
 export class ClientsComponent {
   clients = [
     {
-      name: 'Aerospace Corp',
-      logo: 'assets/images/clients/client-1.png'
+      name: 'Hindustan Aeronautics Limited',
+      logo: '/assets/images/HAL.png'
     },
     {
-      name: 'Railway Systems',
-      logo: 'assets/images/clients/client-2.png'
+      name: 'Bharat Heavy Electricals Limited',
+      logo: 'assets/images/BHEL.jpg'
     },
     {
-      name: 'Electronics Ltd',
-      logo: 'assets/images/clients/client-3.png'
+      name: 'Bharath Electronics Ltd',
+      logo: 'assets/images/BEL.jpg'
     },
     {
-      name: 'Medical Devices Co',
-      logo: 'assets/images/clients/client-4.png'
+      name: 'Medha Servo Drives Pvt Ltd',
+      logo: 'assets/images/Medha.jpg'
     }
   ];
 
   testimonials = [
     {
-      text: "XYZ Pvt. Ltd. has consistently delivered high-quality components that meet our strict aerospace standards. Their attention to detail and commitment to quality is exceptional.",
-      name: "John Smith",
+      text: "VMPL has consistently delivered high-quality components that meet our strict aerospace standards. Their attention to detail and commitment to quality is exceptional.",
+      name: "Mr. Karthik Amineni",
       position: "Procurement Manager",
-      company: "Aerospace Corp",
+      company: "Hindustan Aeronautics Limited",
       avatar: "assets/images/testimonials/avatar-1.jpg"
     },
     {
-      text: "We have been working with XYZ for our railway component needs for over 5 years. Their reliability and quality have been crucial to our success.",
-      name: "Sarah Johnson",
+      text: "We have been working with VMPL for our railway component needs for over 5 years. Their reliability and quality have been crucial to our success.",
+      name: "Mr. Nikhil Rayal",
       position: "Operations Director",
       company: "Railway Systems",
       avatar: "assets/images/testimonials/avatar-2.jpg"
     },
     {
-      text: "The team at XYZ understands our requirements perfectly and always delivers on time. Their technical expertise is invaluable to our projects.",
-      name: "Michael Chen",
+      text: "The team at VMPL understands our requirements perfectly and always delivers on time. Their technical expertise is invaluable to our projects.",
+      name: "Ms. Bharathi",
       position: "Technical Lead",
       company: "Electronics Ltd",
       avatar: "assets/images/testimonials/avatar-3.jpg"
@@ -200,6 +267,11 @@ export class ClientsComponent {
       icon: 'fas fa-microchip',
       name: 'Electronics & Control',
       description: 'Enclosures and components for electronic systems.'
+    },
+    {
+      icon: 'fas fa-stethoscope',
+      name: 'Medical Devices',
+      description: 'Precision components for medical equipment.'
     }
   ];
-} 
+}
