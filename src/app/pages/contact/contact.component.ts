@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormService } from '../../services/form.service';
+import { EmailService } from '../../services/email.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-contact',
@@ -12,6 +15,8 @@ import { FormService } from '../../services/form.service';
           <div class="col-lg-8 mx-auto text-center">
             <h1 class="text-white">Contact Us</h1>
             <p class="lead text-white">Get in touch with our team for any inquiries or support.</p>
+            <!-- Test button for snackbar -->
+            <!-- <button class="btn btn-primary mb-3" (click)="testSnackbar()">Test Notification</button> -->
           </div>
           <!-- <div class="col-lg-6">
             <img src="assets/images/contact-hero.jpg" alt="Contact Us" class="img-fluid rounded shadow">
@@ -27,16 +32,16 @@ import { FormService } from '../../services/form.service';
             <div class="card shadow-sm">
               <div class="card-body">
                 <h2 class="h4 mb-4">Send us a Message</h2>
-                <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+                <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" #formDirective="ngForm">
                   <div class="mb-3">
-                    <label for="name" class="form-label">Full Name</label>
+                    <label for="name" class="form-label">Full Name *</label>
                     <input type="text" class="form-control" id="name" formControlName="name">
                     <div *ngIf="contactForm.get('name')?.invalid && contactForm.get('name')?.touched" class="text-danger">
-                      Please enter your name
+                      Please enter your name (minimum 2 characters)
                     </div>
                   </div>
                   <div class="mb-3">
-                    <label for="email" class="form-label">Email Address</label>
+                    <label for="email" class="form-label">Email Address *</label>
                     <input type="email" class="form-control" id="email" formControlName="email">
                     <div *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched" class="text-danger">
                       Please enter a valid email address
@@ -44,23 +49,42 @@ import { FormService } from '../../services/form.service';
                   </div>
                   <div class="mb-3">
                     <label for="phone" class="form-label">Phone Number</label>
-                    <input type="tel" class="form-control" id="phone" formControlName="phone">
-                  </div>
-                  <div class="mb-3">
-                    <label for="subject" class="form-label">Subject</label>
-                    <input type="text" class="form-control" id="subject" formControlName="subject">
-                    <div *ngIf="contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched" class="text-danger">
-                      Please enter a subject
+                    <input type="text" 
+                           class="form-control" 
+                           id="phone" 
+                           formControlName="phone" 
+                           (keypress)="numberOnly($event)"
+                           maxlength="10">
+                    <div *ngIf="contactForm.get('phone')?.invalid && contactForm.get('phone')?.touched" class="text-danger">
+                      <div *ngIf="contactForm.get('phone')?.errors?.['pattern']">Please enter a valid 10-digit phone number</div>
                     </div>
                   </div>
                   <div class="mb-3">
-                    <label for="message" class="form-label">Message</label>
-                    <textarea class="form-control" id="message" rows="5" formControlName="message"></textarea>
+                    <label for="subject" class="form-label">Subject *</label>
+                    <input type="text" class="form-control" id="subject" formControlName="subject">
+                    <div *ngIf="contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched" class="text-danger">
+                      Please enter a subject (minimum 4 characters)
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="message" class="form-label">Message *</label>
+                    <textarea class="form-control" 
+                              id="message" 
+                              rows="5" 
+                              formControlName="message"
+                              [maxlength]="500"></textarea>
+                    <div class="d-flex justify-content-between">
+                      <small class="text-muted">{{500 - (contactForm.get('message')?.value?.length || 0)}} characters remaining</small>
+                      <small class="text-muted">{{contactForm.get('message')?.value?.length || 0}}/500</small>
+                    </div>
                     <div *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched" class="text-danger">
-                      Please enter your message
+                      <div *ngIf="contactForm.get('message')?.errors?.['required']">Please enter your message</div>
+                      <div *ngIf="contactForm.get('message')?.errors?.['minlength']">Message must be at least 10 characters</div>
+                      <div *ngIf="contactForm.get('message')?.errors?.['maxlength']">Message cannot exceed 500 characters</div>
                     </div>
                   </div>
                   <button type="submit" class="btn btn-primary" [disabled]="contactForm.invalid || isSubmitting">
+                    <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                     {{ isSubmitting ? 'Sending...' : 'Send Message' }}
                   </button>
                 </form>
@@ -83,7 +107,7 @@ import { FormService } from '../../services/form.service';
               <div class="mb-4">
                 <h3 class="h6">Email</h3>
                 <p class="mb-0">
-                  <a href="mailto:vmpl@gmail.com.com" class="text-decoration-none">vmpl&#64;gmail.com</a>
+                  <a href="mailto:vmpl@gmail.com" class="text-decoration-none">vmpl&#64;gmail.com</a>
                 </p>
               </div>
               <div class="mb-4">
@@ -167,32 +191,86 @@ export class ContactComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private formService: FormService
+    private formService: FormService,
+    private emailService: EmailService,
+    private snackBar: MatSnackBar
   ) {
     this.contactForm = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      phone: [''],
-      subject: ['', Validators.required],
-      message: ['', Validators.required]
+      phone: ['', [Validators.pattern('^[0-9]{10}$')]],
+      subject: ['', [Validators.required, Validators.minLength(4)]],
+      message: ['', [
+        Validators.required, 
+        Validators.minLength(10),
+        Validators.maxLength(500)
+      ]]
     });
   }
 
-  ngOnInit(): void {}
+  // Allow only numbers in phone field
+  numberOnly(event: KeyboardEvent): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+  }
+
+  ngOnInit(): void {
+    console.log('Contact component initialized');
+  }
+
+  private showSuccessMessage(): void {
+    console.log('Showing success message');
+    this.snackBar.open('Thank you for your message! We will get back to you soon.', 'Close', {
+      duration: 6000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      panelClass: ['success-snackbar']
+    });
+  }
+
+  private showErrorMessage(error?: any): void {
+    console.log('Showing error message', error);
+    let errorMessage = 'Failed to send message. Please try again later.';
+    if (error?.status === 0) {
+      errorMessage = 'Network error. Please check your internet connection.';
+    }
+    this.snackBar.open(errorMessage, 'Close', {
+      duration: 6000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      panelClass: ['error-snackbar']
+    });
+  }
 
   onSubmit(): void {
-    if (this.contactForm.valid) {
+    if (this.contactForm.valid && !this.isSubmitting) {
       this.isSubmitting = true;
-      this.formService.submitContactForm(this.contactForm.value).subscribe({
-        next: () => {
+      console.log('Sending email with data:', this.contactForm.value);
+
+      this.emailService.sendEmail(this.contactForm.value).subscribe({
+        next: (response) => {
+          console.log('Email sent successfully:', response);
           this.isSubmitting = false;
+          this.showSuccessMessage();
           this.contactForm.reset();
-          // TODO: Show success message
+          Object.keys(this.contactForm.controls).forEach(key => {
+            this.contactForm.get(key)?.setErrors(null);
+          });
         },
-        error: () => {
+        error: (error) => {
+          console.error('Failed to send email:', error);
           this.isSubmitting = false;
-          // TODO: Show error message
+          this.showErrorMessage(error);
         }
+      });
+    } else {
+      // Mark all fields as touched to trigger validation messages
+      Object.keys(this.contactForm.controls).forEach(key => {
+        const control = this.contactForm.get(key);
+        control?.markAsTouched();
       });
     }
   }

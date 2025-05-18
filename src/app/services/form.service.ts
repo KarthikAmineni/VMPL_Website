@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -12,16 +13,18 @@ export class FormService {
   constructor(private http: HttpClient) {}
 
   submitQuoteRequest(formData: any): Observable<any> {
-    // For now, we'll simulate a successful API call
-    // In production, replace this with actual API call:
-    // return this.http.post(`${this.apiUrl}/quote-request`, formData);
-    return of({ success: true, message: 'Quote request submitted successfully' });
+    console.log('Submitting quote request:', formData);
+    // For now, we'll simulate a successful API call with 1 second delay
+    return of({ success: true, message: 'Quote request submitted successfully' }).pipe(
+      delay(1000)
+    );
   }
 
   submitContactForm(formData: any): Observable<any> {
-    // For now, we'll simulate a successful API call
-    // In production, replace this with actual API call:
-    // return this.http.post(`${this.apiUrl}/contact`, formData);
-    return of({ success: true, message: 'Message sent successfully' });
+    console.log('Submitting contact form:', formData);
+    // For now, we'll simulate a successful API call with 1 second delay
+    return of({ success: true, message: 'Message sent successfully' }).pipe(
+      delay(1000)
+    );
   }
 } 

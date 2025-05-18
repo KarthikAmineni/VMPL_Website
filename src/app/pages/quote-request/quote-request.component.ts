@@ -5,15 +5,13 @@ import { FormService } from '../../services/form.service';
 @Component({
   selector: 'app-quote-request',
   template: `
-    <section class="hero bg-light">
+    <section class="hero hero-section bg-light">
+     <div class="background-overlay"></div>
       <div class="container">
         <div class="row align-items-center">
-          <div class="col-lg-6">
-            <h1>Request a Quote</h1>
-            <p class="lead">Fill out the form below to get a detailed quote for your project.</p>
-          </div>
-          <div class="col-lg-6">
-            <img src="assets/images/quote-hero.jpg" alt="Request Quote" class="img-fluid rounded shadow">
+          <div class="col-lg-8 mx-auto text-center">
+            <h1 class="text-white">Request a Quote</h1>
+            <p class="lead text-white">Fill out the form below to get a detailed quote for your project.</p>
           </div>
         </div>
       </div>
@@ -142,6 +140,25 @@ import { FormService } from '../../services/form.service';
       font-size: 0.875rem;
       color: #6c757d;
     }
+      .hero-section {
+  position: relative;
+  background: url('/assets/images/ClientHandShake.jpg') no-repeat center center/cover, white; /* Background image */
+}
+
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Black overlay with 50% transparency */
+  z-index: 1; /* Ensure the overlay is above the background image */
+}
+
+.container {
+  position: relative;
+  z-index: 2; /* Ensures content is above the overlay */
+}
   `]
 })
 export class QuoteRequestComponent implements OnInit {
